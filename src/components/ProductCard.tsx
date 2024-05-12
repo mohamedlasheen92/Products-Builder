@@ -8,14 +8,14 @@ interface IProps {
 }
 
 const ProductCard = ({ product }: IProps) => {
-  const { title, description, imageURL, price } = product;
+  const { title, description, imageURL, price, category } = product;
 
   return (
     <>
-      <div className="border rounded-md p-2 flex flex-col space-y-2">
+      <div className="max-w-sm border rounded-md p-2 flex flex-col space-y-2 mx-auto">
         <Image imageURL={imageURL} alt={title} className="rounded-md" />
-        <h3>{title}</h3>
-        <p>{txtSlicer(description, 100)}</p>
+        <h3 className="text-lg font-semibold">{title}</h3>
+        <p className="text-sm text-gray-600">{txtSlicer(description)}</p>
 
         <div className="flex items-center gap-1">
           <span className="w-5 h-5 bg-indigo-600 rounded-full"></span>
@@ -26,8 +26,8 @@ const ProductCard = ({ product }: IProps) => {
         <div className="flex justify-between items-center">
           <span className="text-blue-700 font-semibold text-lg">${price}</span>
           <Image
-            imageURL="https://images.unsplash.com/photo-1583121274602-3e2820c69888?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80"
-            alt={"Product Name"}
+            imageURL={category.imageURL}
+            alt={category.name}
             className="w-10 h-10 rounded-full bg-cover"
           />
         </div>
