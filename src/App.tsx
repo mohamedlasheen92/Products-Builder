@@ -1,22 +1,47 @@
-import { useState } from "react";
+import { ChangeEvent, FormEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
 import { formInputsList, productsList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
+import { IProduct } from "./interfaces";
 
 const App = () => {
+  const defaultProduct = {
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+    colors: [],
+    category: {
+      name: "",
+      imageURL: "",
+    },
+  };
+
   // ***** State *****
+  const [product, setProduct] = useState<IProduct>(defaultProduct);
   const [isOpen, setIsOpen] = useState(false);
 
   // ***** Handler *****
-  function closeModal() {
-    setIsOpen(false);
-  }
+  const closeModal = () => setIsOpen(false);
+  const openModal = () => setIsOpen(true);
 
-  function openModal() {
-    setIsOpen(true);
-  }
+  const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setProduct({
+      ...product,
+      [name]: value,
+    });
+  };
+  const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    console.log(product);
+  };
+  const onCancel = () => {
+    setProduct(defaultProduct);
+    closeModal();
+  };
 
   // ***** Render *****
   const rederProductsList = productsList.map((product) => (
@@ -32,7 +57,12 @@ const App = () => {
           >
             {label}
           </label>
-          <Input type={type} name={name} />
+          <Input
+            type={type}
+            name={name}
+            value={product[name]}
+            onChange={(event) => onChangeHandler(event)}
+          />
         </div>
       );
     }
@@ -52,11 +82,17 @@ const App = () => {
           closeModal={closeModal}
           title="Add a New Product"
         >
-          <form className="flex flex-col space-y-3">
+          <form
+            className="flex flex-col space-y-3"
+            onSubmit={(event) => onSubmitHandler(event)}
+          >
             {renderFormInputList}
             <div className="flex items-center space-x-3">
               <Button className="bg-blue-700 hover:bg-blue-800">Submit</Button>
-              <Button className="bg-gray-200 hover:bg-gray-300 text-gray-700">
+              <Button
+                className="bg-gray-200 hover:bg-gray-300 text-gray-700"
+                onClick={() => onCancel()}
+              >
                 Cancel
               </Button>
             </div>

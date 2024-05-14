@@ -1,3 +1,5 @@
+import { TInputForm } from "../types";
+
 export interface IProduct {
   id?: string | undefined;
   title: string;
@@ -14,6 +16,6 @@ export interface IProduct {
 export interface IFormInput {
   id: string;
   label: string;
-  name: string;
+  name: TInputForm;
   type: string;
 }
