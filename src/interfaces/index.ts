@@ -19,3 +19,10 @@ export interface IFormInput {
   name: TInputForm;
   type: string;
 }
+
+export interface IValidationInputs {
+  title: string;
+  description: string;
+  imageURL: string;
+  price: string;
+}

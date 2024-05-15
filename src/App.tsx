@@ -5,6 +5,7 @@ import { formInputsList, productsList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
 import { IProduct } from "./interfaces";
+import { productValidation } from "./validation";
 
 const App = () => {
   const defaultProduct = {
@@ -36,7 +37,14 @@ const App = () => {
   };
   const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log(product);
+
+    const errors = productValidation({
+      title: product.title,
+      description: product.description,
+      imageURL: product.imageURL,
+      price: product.price,
+    });
+    console.log(errors);
   };
   const onCancel = () => {
     setProduct(defaultProduct);
