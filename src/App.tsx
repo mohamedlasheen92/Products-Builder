@@ -4,8 +4,9 @@ import Modal from "./components/ui/Modal";
 import { formInputsList, productsList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
-import { IProduct } from "./interfaces";
+import { IProduct, IValidationInputs } from "./interfaces";
 import { productValidation } from "./validation";
+import ErrorMsg from "./components/ErrorMsg";
 
 const App = () => {
   const defaultProduct = {
@@ -21,6 +22,7 @@ const App = () => {
   };
 
   // ***** State *****
+  const [errors, setErrors] = useState<IValidationInputs>({title: "", description: "", imageURL: "", price: ""})
   const [product, setProduct] = useState<IProduct>(defaultProduct);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -34,17 +36,36 @@ const App = () => {
       ...product,
       [name]: value,
     });
+    setErrors({
+      ...errors,
+      [name]: ""
+    })
+    
+    
   };
   const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const {title, description, imageURL, price}= product;
+
     const errors = productValidation({
-      title: product.title,
-      description: product.description,
-      imageURL: product.imageURL,
-      price: product.price,
+      title,
+      description,
+      imageURL,
+      price,
     });
     console.log(errors);
+
+    const hasError = Object.values(errors).some(value => value !== "")
+    if (hasError) {
+      setErrors(errors)
+      return
+    }
+
+    console.log("SEND DATA TO THE SERVER.");
+
+
+    
   };
   const onCancel = () => {
     setProduct(defaultProduct);
@@ -70,6 +91,9 @@ const App = () => {
             name={name}
             value={product[name]}
             onChange={(event) => onChangeHandler(event)}
+          />
+          <ErrorMsg
+            message={errors[name]}
           />
         </div>
       );
@@ -98,7 +122,7 @@ const App = () => {
             <div className="flex items-center space-x-3">
               <Button className="bg-blue-700 hover:bg-blue-800">Submit</Button>
               <Button
-                className="bg-gray-200 hover:bg-gray-300 text-gray-700"
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800"
                 onClick={() => onCancel()}
               >
                 Cancel

@@ -32,7 +32,7 @@ export const productValidation = ({title, description, imageURL, price}: IValida
   if (!description.trim() || description.length < 10 || description.length > 800) {
     errors.description = "Product description must be between 10 and 800 characters!"
   }
-  if (!description.trim() || !isValidImgURL) {
+  if (!imageURL.trim() || !isValidImgURL) {
     errors.imageURL = "Valid image URL is required"
   }
   if (!price.trim() || isNaN(Number(price))) {
