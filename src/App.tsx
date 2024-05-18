@@ -23,11 +23,11 @@ const App = () => {
   };
 
   // ***** State *****
+  const [products, setProducts] = useState<IProduct[]>(productsList)
   const [tempColors, setTempColors] = useState<string[]>([])
   const [errors, setErrors] = useState<IValidationInputs>({title: "", description: "", imageURL: "", price: ""})
   const [product, setProduct] = useState<IProduct>(defaultProduct)
   const [isOpen, setIsOpen] = useState(false)
-  console.log(tempColors);
 
   
   // ***** Handler *****
@@ -71,10 +71,10 @@ const App = () => {
     }
 
     console.log("SEND DATA TO THE SERVER.");
-
-
-    
-
+    setProducts(prev => [{ ...product, id: Math.random().toString().slice(2), colors: tempColors }, ...prev])
+    setProduct(defaultProduct)
+    setTempColors([])
+    closeModal()
     
   };
   const onCancel = () => {
@@ -83,7 +83,7 @@ const App = () => {
   };
 
   // ***** Render *****
-  const rederProductsList = productsList.map((product) => (
+  const rederProductsList = products.map((product) => (
     <ProductCard key={product.id} product={product} />
   ));
   const renderFormInputList = formInputsList.map(
@@ -141,17 +141,22 @@ const App = () => {
             {renderFormInputList}
             <div className="flex items-center flex-wrap gap-1">
               {renderModalColors}
-          </div>
-          <div className="flex items-center flex-wrap gap-1">
-              {
-                tempColors.map(tempColor => {
-                  return <span key={tempColor} className="text-xs text-white p-1 rounded-md" style={{backgroundColor: tempColor}}>{tempColor}</span>
-                })
-                
-            }
-          </div>
+            </div>
+            <div className="flex items-center flex-wrap gap-1">
+              {tempColors.map((tempColor) => {
+                return (
+                  <span
+                    key={tempColor}
+                    className="text-xs text-white p-1 rounded-md"
+                    style={{ backgroundColor: tempColor }}
+                  >
+                    {tempColor}
+                  </span>
+                );
+              })}
+            </div>
             <div className="flex items-center space-x-3">
-              <Button className="bg-blue-700 hover:bg-blue-800">Submit</Button>
+              <Button className="bg-blue-700 hover:bg-blue-800 text-white">Submit</Button>
               <Button
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800"
                 onClick={() => onCancel()}

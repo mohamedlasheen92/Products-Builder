@@ -11,7 +11,7 @@ const Button = ({ children, className, width = "w-full", ...rest }: IProps) => {
   return (
     <>
       <button
-        className={`rounded-md text-white ${width} p-2 ${className}`}
+        className={`rounded-md font-semibold ${width} p-2 ${className}`}
         {...rest}
       >
         {children}

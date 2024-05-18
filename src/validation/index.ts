@@ -26,8 +26,8 @@ export const productValidation = ({title, description, imageURL, price}: IValida
 
   const isValidImgURL = /https?:\/\/[^\s]+?\.(?:jpg|jpeg|png|gif|bmp)(?:\?[^?]*)?/g.test(imageURL);
 
-  if (!title.trim() || title.length < 10 || title.length > 40) {
-    errors.title = "Product title must be between 10 and 40 characters!"
+  if (!title.trim() || title.length < 10 || title.length > 80) {
+    errors.title = "Product title must be between 10 and 80 characters!"
   }
   if (!description.trim() || description.length < 10 || description.length > 800) {
     errors.description = "Product description must be between 10 and 800 characters!"
