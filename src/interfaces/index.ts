@@ -26,3 +26,9 @@ export interface IValidationInputs {
   imageURL: string;
   price: string;
 }
+
+export interface ICategory {
+  id: string;
+  name: string;
+  imageURL: string;
+}

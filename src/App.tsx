@@ -1,13 +1,15 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
-import { colors, formInputsList, productsList } from "./data";
+import { categories, colors, formInputsList, productsList } from "./data";
 import Button from "./components/ui/Button";
 import Input from "./components/ui/Input";
 import { IProduct, IValidationInputs } from "./interfaces";
 import { productValidation } from "./validation";
 import ErrorMsg from "./components/ErrorMsg";
 import CircleColor from "./components/CircleColor";
+import { v4 as uuid } from "uuid";
+import Select from "./components/ui/Select";
 
 const App = () => {
   const defaultProduct = {
@@ -23,6 +25,7 @@ const App = () => {
   };
 
   // ***** State *****
+  const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [products, setProducts] = useState<IProduct[]>(productsList)
   const [tempColors, setTempColors] = useState<string[]>([])
   const [errors, setErrors] = useState<IValidationInputs>({title: "", description: "", imageURL: "", price: ""})
@@ -71,7 +74,7 @@ const App = () => {
     }
 
     console.log("SEND DATA TO THE SERVER.");
-    setProducts(prev => [{ ...product, id: Math.random().toString().slice(2), colors: tempColors }, ...prev])
+    setProducts(prev => [{ ...product, id: uuid(), colors: tempColors, category: selectedCategory }, ...prev])
     setProduct(defaultProduct)
     setTempColors([])
     closeModal()
@@ -139,6 +142,7 @@ const App = () => {
             onSubmit={(event) => onSubmitHandler(event)}
           >
             {renderFormInputList}
+            <Select selected={selectedCategory} setSelected={setSelectedCategory} />
             <div className="flex items-center flex-wrap gap-1">
               {renderModalColors}
             </div>

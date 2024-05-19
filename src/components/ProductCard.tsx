@@ -33,7 +33,7 @@ const ProductCard = ({ product }: IProps) => {
           />
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-2 ">
           <Button
             className="text-white bg-blue-700 hover:bg-blue-800"
             onClick={() => console.log("Clicked")}
