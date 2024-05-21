@@ -25,17 +25,22 @@ const App = () => {
   };
 
   // ***** State *****
+  const [productToEdit, setProductToEdit] = useState<IProduct>(defaultProduct);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [products, setProducts] = useState<IProduct[]>(productsList)
   const [tempColors, setTempColors] = useState<string[]>([])
   const [errors, setErrors] = useState<IValidationInputs>({title: "", description: "", imageURL: "", price: ""})
   const [product, setProduct] = useState<IProduct>(defaultProduct)
   const [isOpen, setIsOpen] = useState(false)
+  const [isOpenEditModal, setIsOpenEditModal] = useState(false)
+
 
   
   // ***** Handler *****
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
+  const closeEditModal = () => setIsOpenEditModal(false);
+  const openEditModal = () => setIsOpenEditModal(true);
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -87,7 +92,12 @@ const App = () => {
 
   // ***** Render *****
   const rederProductsList = products.map((product) => (
-    <ProductCard key={product.id} product={product} />
+    <ProductCard
+      key={product.id}
+      product={product}
+      setProductToEdit={setProductToEdit}
+      openEditModal={openEditModal}
+    />
   ));
   const renderFormInputList = formInputsList.map(
     ({ id, label, name, type }) => {
@@ -132,6 +142,8 @@ const App = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           {rederProductsList}
         </div>
+
+        {/* ADD PRODUCT MODAL */}
         <Modal
           isOpen={isOpen}
           closeModal={closeModal}
@@ -142,7 +154,10 @@ const App = () => {
             onSubmit={(event) => onSubmitHandler(event)}
           >
             {renderFormInputList}
-            <Select selected={selectedCategory} setSelected={setSelectedCategory} />
+            <Select
+              selected={selectedCategory}
+              setSelected={setSelectedCategory}
+            />
             <div className="flex items-center flex-wrap gap-1">
               {renderModalColors}
             </div>
@@ -160,7 +175,54 @@ const App = () => {
               })}
             </div>
             <div className="flex items-center space-x-3">
-              <Button className="bg-blue-700 hover:bg-blue-800 text-white">Submit</Button>
+              <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+                Submit
+              </Button>
+              <Button
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800"
+                onClick={() => onCancel()}
+              >
+                Cancel
+              </Button>
+            </div>
+          </form>
+        </Modal>
+
+        {/* ADD PRODUCT MODAL */}
+        <Modal
+          isOpen={isOpenEditModal}
+          closeModal={closeEditModal}
+          title="Update This Product"
+        >
+          <form
+            className="flex flex-col space-y-3"
+            onSubmit={(event) => onSubmitHandler(event)}
+          >
+            {renderFormInputList}
+            <Select
+              selected={selectedCategory}
+              setSelected={setSelectedCategory}
+            />
+            <div className="flex items-center flex-wrap gap-1">
+              {renderModalColors}
+            </div>
+            <div className="flex items-center flex-wrap gap-1">
+              {tempColors.map((tempColor) => {
+                return (
+                  <span
+                    key={tempColor}
+                    className="text-xs text-white p-1 rounded-md"
+                    style={{ backgroundColor: tempColor }}
+                  >
+                    {tempColor}
+                  </span>
+                );
+              })}
+            </div>
+            <div className="flex items-center space-x-3">
+              <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+                Submit
+              </Button>
               <Button
                 className="bg-gray-200 hover:bg-gray-300 text-gray-800"
                 onClick={() => onCancel()}
