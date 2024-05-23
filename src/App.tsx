@@ -10,6 +10,7 @@ import ErrorMsg from "./components/ErrorMsg";
 import CircleColor from "./components/CircleColor";
 import { v4 as uuid } from "uuid";
 import Select from "./components/ui/Select";
+import { TInputForm } from "./types";
 
 const App = () => {
   const defaultProduct = {
@@ -46,6 +47,20 @@ const App = () => {
     const { name, value } = event.target;
     setProduct({
       ...product,
+      [name]: value,
+    });
+    setErrors({
+      ...errors,
+      [name]: ""
+    })
+
+    
+    
+  };
+  const onChangeEditHandler = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setProductToEdit({
+      ...productToEdit,
       [name]: value,
     });
     setErrors({
@@ -116,9 +131,7 @@ const App = () => {
             value={product[name]}
             onChange={(event) => onChangeHandler(event)}
           />
-          <ErrorMsg
-            message={errors[name]}
-          />
+          <ErrorMsg message={errors[name]} />
         </div>
       );
     }
@@ -132,6 +145,26 @@ const App = () => {
       setTempColors((prev) => [...prev, color])
     }}  />;
   })
+  const renderProductEditWithErrorMsg = (id: string, label: string, name: TInputForm) => {
+    return (
+      <div className="flex flex-col">
+        <label
+          htmlFor={id}
+          className="nb-[2px] text-sm font-medium text-gray-700"
+        >
+          {label}
+        </label>
+        <Input
+          id={id}
+          type="text"
+          name={name}
+          value={productToEdit[name]}
+          onChange={(event) => onChangeEditHandler(event)}
+        />
+        <ErrorMsg message={errors[name]} />
+      </div>
+    );
+  }
 
   return (
     <>
@@ -188,7 +221,7 @@ const App = () => {
           </form>
         </Modal>
 
-        {/* ADD PRODUCT MODAL */}
+        {/* UPDATE PRODUCT MODAL */}
         <Modal
           isOpen={isOpenEditModal}
           closeModal={closeEditModal}
@@ -198,27 +231,13 @@ const App = () => {
             className="flex flex-col space-y-3"
             onSubmit={(event) => onSubmitHandler(event)}
           >
-            {renderFormInputList}
-            <Select
-              selected={selectedCategory}
-              setSelected={setSelectedCategory}
-            />
-            <div className="flex items-center flex-wrap gap-1">
-              {renderModalColors}
-            </div>
-            <div className="flex items-center flex-wrap gap-1">
-              {tempColors.map((tempColor) => {
-                return (
-                  <span
-                    key={tempColor}
-                    className="text-xs text-white p-1 rounded-md"
-                    style={{ backgroundColor: tempColor }}
-                  >
-                    {tempColor}
-                  </span>
-                );
-              })}
-            </div>
+            {renderProductEditWithErrorMsg("title", "Product Title", "title")}
+            {renderProductEditWithErrorMsg("description", "Product Description", "description")}
+            {renderProductEditWithErrorMsg("imageURL", "Product Image URL", "imageURL")}
+            {renderProductEditWithErrorMsg("price", "Product Price", "price")}
+
+            
+
             <div className="flex items-center space-x-3">
               <Button className="bg-blue-700 hover:bg-blue-800 text-white">
                 Submit
