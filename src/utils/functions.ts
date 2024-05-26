@@ -5,7 +5,7 @@
  * @returns {string} The sliced string.
  */
 
-export const txtSlicer = (str: string, amount: number = 50): string => {
+export const txtSlicer = (str: string, amount: number = 80): string => {
   if (str.length >= amount) return `${str.slice(0, amount)}...`;
   return str;
 };
