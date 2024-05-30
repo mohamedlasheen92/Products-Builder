@@ -26,7 +26,6 @@ const App = () => {
   };
 
   // ***** State *****
-  // const [productToEditTempColors, setProductToEditTempColors] = useState<string[]>([]);
   const [productToEditIndex, setProductToEditIndex] = useState<number>(0);
   const [productToEdit, setProductToEdit] = useState<IProduct>(defaultProduct);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
@@ -192,26 +191,6 @@ const App = () => {
         setTempColors((prev) => [...prev, color]);
     }}  />;
   })
-  // const renderModalEditColors = colors.map(color => {
-  //   //  ** productToEdit.colors ** index **
-  //   return <CircleColor key={color} color={color} onClick={() => {
-  //     if (productToEdit.colors.includes(color)) {
-
-  //       const minusColor = productToEdit.colors.filter(co => co !== color)
-  //       productToEdit.colors = minusColor
-  //       const editProducts = [...products]
-  //       editProducts[productToEditIndex] = productToEdit
-  //       setProducts(editProducts)
-        
-  //       return
-  //     }
-  //     productToEdit.colors = [...productToEdit.colors, color]
-  //     const editProducts = [...products]
-  //     editProducts[productToEditIndex] = productToEdit
-  //     setProducts(editProducts)
-
-  //   }}  />;
-  // })
 
   const renderProductEditWithErrorMsg = (id: string, label: string, name: TInputForm) => {
     return (
@@ -300,9 +279,24 @@ const App = () => {
             onSubmit={(event) => onSubmitEditHandler(event)}
           >
             {renderProductEditWithErrorMsg("title", "Product Title", "title")}
-            {renderProductEditWithErrorMsg("description", "Product Description", "description")}
-            {renderProductEditWithErrorMsg("imageURL", "Product Image URL", "imageURL")}
+            {renderProductEditWithErrorMsg(
+              "description",
+              "Product Description",
+              "description"
+            )}
+            {renderProductEditWithErrorMsg(
+              "imageURL",
+              "Product Image URL",
+              "imageURL"
+            )}
             {renderProductEditWithErrorMsg("price", "Product Price", "price")}
+
+            <Select
+              selected={productToEdit.category}
+              setSelected={(selectedCategory) =>
+                setProductToEdit({ ...productToEdit, category: selectedCategory })
+              }
+            />
 
             <div className="flex items-center flex-wrap gap-1">
               {renderModalColors}
