@@ -219,7 +219,7 @@ export const categories: ICategory[] = [
     id: uuid(),
     name: "Cars",
     imageURL:
-      "https://img.freepik.com/premium-psd/sport-car-transparent-background-3d-rendering-illustration_494250-39270.jpg",
+      "https://images.pexels.com/photos/11589801/pexels-photo-11589801.jpeg?auto=compress&cs=tinysrgb&w=600",
   },
   {
     id: uuid(),

@@ -1,5 +1,5 @@
 import { IProduct } from "../interfaces";
-import { txtSlicer } from "../utils/functions";
+import { priceSeparator, txtSlicer } from "../utils/functions";
 import CircleColor from "./CircleColor";
 import Image from "./Image";
 import Button from "./ui/Button";
@@ -42,15 +42,24 @@ const ProductCard = ({ product, setProductToEdit, openEditModal,idx, setProductT
           {txtSlicer(description)}
         </p>
 
-        <div className="flex items-center gap-1">{renderProductColors}</div>
+        <div className="flex items-center gap-1">
+          {colors.length ? (
+            renderProductColors
+          ) : (
+            <p className="min-h-6">No Colors Available!</p>
+          )}
+        </div>
 
         <div className="flex justify-between items-center">
-          <span className="text-blue-700 font-semibold text-lg">${price}</span>
-          <Image
-            imageURL={category.imageURL}
-            alt={category.name}
-            className="w-10 h-10 rounded-full object-cover"
-          />
+          <span className="text-blue-700 font-semibold text-lg">${priceSeparator(price)}</span>
+          <div className="category flex items-center gap-2">
+            <span className="text-xs">{ category.name}</span>
+            <Image
+              imageURL={category.imageURL}
+              alt={category.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          </div>
         </div>
 
         <div className="flex gap-2 ">
