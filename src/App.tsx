@@ -35,6 +35,7 @@ const App = () => {
   const [product, setProduct] = useState<IProduct>(defaultProduct)
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false)
 
 
   
@@ -43,7 +44,9 @@ const App = () => {
   const closeModal = () => setIsOpen(false);
   const openModal = () => setIsOpen(true);
   const closeEditModal = () => setIsOpenEditModal(false);
+  const closeDeleteModal = () => setIsOpenDeleteModal(false);
   const openEditModal = () => setIsOpenEditModal(true);
+  const openDeleteModal = () => setIsOpenDeleteModal(true);
 
   const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -136,6 +139,13 @@ const App = () => {
     setTempColors([]);
     closeEditModal();
   };
+  const onDeleteHandler = () => {
+    console.log(productToEdit.id);
+    const filteredProducts = products.filter(({ id: productID }) => productID !== productToEdit.id)
+    setProducts(filteredProducts)
+    closeDeleteModal()
+  };
+
   const onCancel = () => {
     setProduct(defaultProduct);
     closeModal();
@@ -145,16 +155,18 @@ const App = () => {
     closeEditModal();
   };
 
+  
   // ***** Render *****
   const rederProductsList = products.map((product, idx) => (
-      <ProductCard
-        key={product.id}
-        product={product}
-        setProductToEdit={setProductToEdit}
-        openEditModal={openEditModal}
-        setProductToEditIndex={setProductToEditIndex}
-        idx={idx}
-      />
+    <ProductCard
+      key={product.id}
+      product={product}
+      setProductToEdit={setProductToEdit}
+      openEditModal={openEditModal}
+      setProductToEditIndex={setProductToEditIndex}
+      idx={idx}
+      openDeleteModal={openDeleteModal}
+    />
   ));
   const renderFormInputList = formInputsList.map(
     ({ id, label, name, type }) => {
@@ -335,6 +347,26 @@ const App = () => {
               </Button>
             </div>
           </form>
+        </Modal>
+
+        {/* DELETE PRODUCT MODAL */}
+        <Modal
+          isOpen={isOpenDeleteModal}
+          closeModal={closeDeleteModal}
+          title="Warning: Delete Product"
+          description={`Deleting "${productToEdit.title}" will permanently remove it from your store. Are you sure you want to proceed?`}
+        >
+            <div className="flex items-center space-x-3">
+              <Button className="bg-red-700 hover:bg-red-800 text-white" onClick={() => onDeleteHandler()}>
+                Yes, Delete
+              </Button>
+              <Button
+                className="bg-gray-200 hover:bg-gray-300 text-gray-800"
+                onClick={() => closeDeleteModal()}
+              >
+                Cancel
+              </Button>
+            </div>
         </Modal>
       </main>
     </>
