@@ -48,7 +48,7 @@ const ProductCard = ({ product, setProductToEdit, openEditModal,idx, setProductT
           {txtSlicer(description)}
         </p>
 
-        <div className="flex items-center gap-1">
+        <div className="flex items-center flex-wrap gap-1">
           {colors.length ? (
             renderProductColors
           ) : (

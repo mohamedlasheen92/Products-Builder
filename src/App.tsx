@@ -11,6 +11,7 @@ import CircleColor from "./components/CircleColor";
 import { v4 as uuid } from "uuid";
 import Select from "./components/ui/Select";
 import { TInputForm } from "./types";
+import toast, { Toaster } from "react-hot-toast";
 
 const App = () => {
   const defaultProduct = {
@@ -103,6 +104,14 @@ const App = () => {
     setProduct(defaultProduct)
     setTempColors([])
     closeModal()
+    toast(`"${title}" Added Successfully!`, {
+      icon: "✔",
+      style: {
+        backgroundColor: "#5cb85c",
+        color: "#fff",
+        fontWeight: "500",
+      },
+    });
     
   };
   const onSubmitEditHandler = (event: FormEvent<HTMLFormElement>) => {
@@ -138,12 +147,28 @@ const App = () => {
     setProductToEdit(defaultProduct);
     setTempColors([]);
     closeEditModal();
+    toast(`"${title}" Edited Successfully!`, {
+      icon: "✍️",
+      style: {
+        backgroundColor: "#5d4fd1",
+        color: "#fff",
+        fontWeight: "500",
+      },
+    });
   };
   const onDeleteHandler = () => {
     console.log(productToEdit.id);
     const filteredProducts = products.filter(({ id: productID }) => productID !== productToEdit.id)
     setProducts(filteredProducts)
     closeDeleteModal()
+    toast(`"${productToEdit.title}" Successfully Removed.`, {
+      icon: "👋",
+      style: {
+        backgroundColor: "#b91c1c",
+        color: "#fff",
+        fontWeight: "500",
+      },
+    });
   };
 
   const onCancel = () => {
@@ -230,7 +255,7 @@ const App = () => {
       <main className="container my-10">
         <div className="text-center">
           <Button
-            className="bg-blue-700 hover:bg-blue-800 text-white max-w-52 mb-10 mx-auto"
+            className="bg-blue-700 hover:bg-blue-800 text-white max-w-52 mb-10 mx-auto py-3"
             onClick={openModal}
           >
             Build a Product
@@ -356,18 +381,23 @@ const App = () => {
           title="Warning: Delete Product"
           description={`Deleting "${productToEdit.title}" will permanently remove it from your store. Are you sure you want to proceed?`}
         >
-            <div className="flex items-center space-x-3">
-              <Button className="bg-red-700 hover:bg-red-800 text-white" onClick={() => onDeleteHandler()}>
-                Yes, Delete
-              </Button>
-              <Button
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800"
-                onClick={() => closeDeleteModal()}
-              >
-                Cancel
-              </Button>
-            </div>
+          <div className="flex items-center space-x-3">
+            <Button
+              className="bg-red-700 hover:bg-red-800 text-white"
+              onClick={() => onDeleteHandler()}
+            >
+              Yes, Delete
+            </Button>
+            <Button
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800"
+              onClick={() => closeDeleteModal()}
+            >
+              Cancel
+            </Button>
+          </div>
         </Modal>
+
+        <Toaster />
       </main>
     </>
   );
