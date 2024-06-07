@@ -37,7 +37,7 @@ const ProductCard = ({ product, setProductToEdit, openEditModal,idx, setProductT
 
   return (
     <>
-      <div className="max-w-sm border rounded-md p-2 flex flex-col space-y-2 mx-auto">
+      <div className="max-w-sm border rounded-md p-2 flex flex-col justify-between gap-2 mx-auto">
         <Image
           imageURL={imageURL}
           alt={title}

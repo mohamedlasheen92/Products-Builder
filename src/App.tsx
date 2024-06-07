@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from "react";
+import { ChangeEvent, useState } from "react";
 import ProductCard from "./components/ProductCard";
 import Modal from "./components/ui/Modal";
 import { categories, colors, formInputsList, productsList } from "./data";
@@ -25,6 +25,12 @@ const App = () => {
       imageURL: "",
     },
   };
+  const defaultNoErrors = {
+    title: "",
+    description: "",
+    imageURL: "",
+    price: "",
+  };
 
   // ***** State *****
   const [productToEditIndex, setProductToEditIndex] = useState<number>(0);
@@ -32,7 +38,7 @@ const App = () => {
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [products, setProducts] = useState<IProduct[]>(productsList)
   const [tempColors, setTempColors] = useState<string[]>([])
-  const [errors, setErrors] = useState<IValidationInputs>({title: "", description: "", imageURL: "", price: ""})
+  const [errors, setErrors] = useState<IValidationInputs>(defaultNoErrors)
   const [product, setProduct] = useState<IProduct>(defaultProduct)
   const [isOpen, setIsOpen] = useState(false)
   const [isOpenEditModal, setIsOpenEditModal] = useState(false)
@@ -73,16 +79,11 @@ const App = () => {
       ...errors,
       [name]: ""
     })
-
-    
     
   };
-  const onSubmitHandler = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmitHandler = () => {
+    const { title, description, imageURL, price } = product;
 
-    const {title, description, imageURL, price} = product
-    
-    
     const errors = productValidation({
       title,
       description,
@@ -91,19 +92,28 @@ const App = () => {
     });
 
     // const hasErrors = Object.values(errors).some(value => value !== "")
-    const hasErrors = Boolean(errors.title || errors.description || errors.imageURL || errors.price)
+    const hasErrors = Boolean(
+      errors.title || errors.description || errors.imageURL || errors.price
+    );
 
-    
     if (hasErrors) {
-      setErrors(errors)
-      return
+      setErrors(errors);
+      return;
     }
 
     console.log("SEND DATA TO THE SERVER.");
-    setProducts(prev => [{ ...product, id: uuid(), colors: tempColors, category: selectedCategory }, ...prev])
-    setProduct(defaultProduct)
-    setTempColors([])
-    closeModal()
+    setProducts((prev) => [
+      {
+        ...product,
+        id: uuid(),
+        colors: tempColors,
+        category: selectedCategory,
+      },
+      ...prev,
+    ]);
+    setProduct(defaultProduct);
+    setTempColors([]);
+    closeModal();
     toast(`"${title}" Added Successfully!`, {
       icon: "✔",
       style: {
@@ -112,10 +122,8 @@ const App = () => {
         fontWeight: "500",
       },
     });
-    
   };
-  const onSubmitEditHandler = (event: FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const onSubmitEditHandler = () => {
 
     const { title, description, imageURL, price } = productToEdit;
 
@@ -172,8 +180,9 @@ const App = () => {
   };
 
   const onCancel = () => {
-    setProduct(defaultProduct);
-    closeModal();
+    setProduct(defaultProduct)
+    closeModal()
+    setErrors(defaultNoErrors)
   };
   const onCancelEdit = () => {
     setProductToEdit(productToEdit);
@@ -194,21 +203,18 @@ const App = () => {
     />
   ));
   const renderFormInputList = formInputsList.map(
-    ({ id, label, name, type }) => {
+    ({ id, label, name }) => {
       return (
         <div key={id} className="flex flex-col">
-          <label
-            htmlFor={id}
-            className="nb-[2px] text-sm font-medium text-gray-700"
-          >
+          <label htmlFor={id} className="mb-[1px] text-sm font-medium text-gray-700" >
             {label}
           </label>
           <Input
+            type="text"
             id={id}
-            type={type}
             name={name}
             value={product[name]}
-            onChange={(event) => onChangeHandler(event)}
+            onChange={onChangeHandler}
           />
           <ErrorMsg message={errors[name]} />
         </div>
@@ -271,10 +277,7 @@ const App = () => {
           closeModal={closeModal}
           title="Add a New Product"
         >
-          <form
-            className="flex flex-col space-y-3"
-            onSubmit={(event) => onSubmitHandler(event)}
-          >
+          <form className="flex flex-col space-y-3" onSubmit={(event) => event.preventDefault()}>
             {renderFormInputList}
             <Select
               selected={selectedCategory}
@@ -297,7 +300,10 @@ const App = () => {
               })}
             </div>
             <div className="flex items-center space-x-3">
-              <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+              <Button
+                className="bg-blue-700 hover:bg-blue-800 text-white"
+                onClick={() => onSubmitHandler()}
+              >
                 Submit
               </Button>
               <Button
@@ -318,7 +324,7 @@ const App = () => {
         >
           <form
             className="flex flex-col space-y-3"
-            onSubmit={(event) => onSubmitEditHandler(event)}
+            onSubmit={(event) => event.preventDefault()}
           >
             {renderProductEditWithErrorMsg("title", "Product Title", "title")}
             {renderProductEditWithErrorMsg(
@@ -361,7 +367,7 @@ const App = () => {
             </div>
 
             <div className="flex items-center space-x-3">
-              <Button className="bg-blue-700 hover:bg-blue-800 text-white">
+              <Button className="bg-blue-700 hover:bg-blue-800 text-white" onClick={() => onSubmitEditHandler()}>
                 Submit
               </Button>
               <Button
